@@ -1,0 +1,57 @@
+{
+  "workflow": {
+    "nodes": [
+      {
+        "id": "input_node",
+        "type": "Input",
+        "label": "Process Tasks",
+        "nodeCategory": "input"
+      },
+      {
+        "id": "task_delegation_agent",
+        "type": "Agent",
+        "label": "Task Delegation Agent",
+        "nodeCategory": "agent",
+        "agent_id": "698901b47b0e3eacc4301937",
+        "agent_config": {
+          "name": "Task Delegation Agent",
+          "description": "Monitors Gmail for emails containing delegation keywords (urgent, team, delegate), extracts task title, description, priority, context, and assignee mentions (@Name or \"for Name\"), then sends formatted Slack messages to designated teammates with complete task details.",
+          "provider_id": "openai",
+          "model": "gpt-4.1",
+          "temperature": 0.3,
+          "top_p": 1,
+          "tool_configs": [
+            {
+              "tool_name": "gmail",
+              "tool_source": "composio",
+              "action_names": ["GMAIL_FETCH_EMAILS"],
+              "persist_auth": false
+            },
+            {
+              "tool_name": "slack",
+              "tool_source": "composio",
+              "action_names": ["SLACK_SENDS_A_MESSAGE_TO_A_SLACK_CHANNEL"],
+              "persist_auth": false
+            }
+          ]
+        }
+      },
+      {
+        "id": "output_node",
+        "type": "Output",
+        "label": "Delegation Results",
+        "nodeCategory": "end"
+      }
+    ],
+    "edges": [
+      {
+        "source": "input_node",
+        "target": "task_delegation_agent"
+      },
+      {
+        "source": "task_delegation_agent",
+        "target": "output_node"
+      }
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "agent_name": "Task Delegation Agent",
+  "agent_id": "698901b47b0e3eacc4301937",
+  "test_message": "Show me a sample response for task delegation processing. Just provide the response format with example data.",
+  "expected_purpose": "Monitors Gmail for delegation emails, extracts task details, and sends Slack notifications to teammates",
+  "timestamp": "2026-02-08T21:37:52.563469",
+  "is_valid_json": true,
+  "validation_errors": [],
+  "actual_response": {
+    "status": "success",
+    "result": {
+      "summary": "Processed 2 task emails, notified 3 teammates via Slack",
+      "data": {
+        "tasks_processed": 2,
+        "teammates_notified": 3
+      },
+      "items": [
+        {
+          "title": "Prepare Q2 Financial Report",
+          "description": "Compile and finalize the Q2 report using the latest numbers from the finance team.",
+          "priority": "urgent",
+          "assignee": "John Smith",
+          "slack_status": "sent",
+          "email_subject": "URGENT: Q2 Financial Report for Team",
+          "email_from": "cfo@example.com",
+          "timestamp": "2024-06-09T14:55:17Z"
+        },
+        {
+          "title": "Update Marketing Materials",
+          "description": "Revise marketing brochures to include the new product images.",
+          "priority": "high",
+          "assignee": "Emily Zhang",
+          "slack_status": "sent",
+          "email_subject": "Team: Marketing Material Update Needed",
+          "email_from": "marketinglead@example.com",
+          "timestamp": "2024-06-09T13:32:11Z"
+        },
+        {
+          "title": "Update Marketing Materials",
+          "description": "Revise marketing brochures to include the new product images.",
+          "priority": "high",
+          "assignee": "Alex Patel",
+          "slack_status": "sent",
+          "email_subject": "Team: Marketing Material Update Needed",
+          "email_from": "marketinglead@example.com",
+          "timestamp": "2024-06-09T13:32:11Z"
+        }
+      ]
+    },
+    "metadata": {
+      "agent_name": "Task Delegation Agent",
+      "timestamp": "2024-06-09T15:20:59Z"
+    }
+  },
+  "raw_response": "{\n  \"status\": \"success\",\n  \"result\": {\n    \"summary\": \"Processed 2 task emails, notified 3 teammates via Slack\",\n    \"data\": {\n      \"tasks_processed\": 2,\n      \"teammates_notified\": 3\n    },\n    \"items\": [\n      {\n        \"title\": \"Prepare Q2 Financial Report\",\n        \"description\": \"Compile and finalize the Q2 report using the latest numbers from the finance team.\",\n        \"priority\": \"urgent\",\n        \"assignee\": \"John Smith\",\n        \"slack_status\": \"sent\",\n        \"email_subject\": \"URGENT: Q2 Financial Report for Team\",\n        \"email_from\": \"cfo@example.com\",\n        \"timestamp\": \"2024-06-09T14:55:17Z\"\n      },\n      {\n        \"title\": \"Update Marketing Materials\",\n        \"description\": \"Revise marketing brochures to include the new product images.\",\n        \"priority\": \"high\",\n        \"assignee\": \"Emily Zhang\",\n        \"slack_status\": \"sent\",\n        \"email_subject\": \"Team: Marketing Material Update Needed\",\n        \"email_from\": \"marketinglead@example.com\",\n        \"timestamp\": \"2024-06-09T13:32:11Z\"\n      },\n      {\n        \"title\": \"Update Marketing Materials\",\n        \"description\": \"Revise marketing brochures to include the new product images.\",\n        \"priority\": \"high\",\n        \"assignee\": \"Alex Patel\",\n        \"slack_status\": \"sent\",\n        \"email_subject\": \"Team: Marketing Material Update Needed\",\n        \"email_from\": \"marketinglead@example.com\",\n        \"timestamp\": \"2024-06-09T13:32:11Z\"\n      }\n    ]\n  },\n  \"metadata\": {\n    \"agent_name\": \"Task Delegation Agent\",\n    \"timestamp\": \"2024-06-09T15:20:59Z\"\n  }\n}"
+}

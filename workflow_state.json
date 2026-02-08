@@ -1,0 +1,20 @@
+{
+  "agents": [
+    {
+      "agent_id": "698901b47b0e3eacc4301937",
+      "agent_name": "Task Delegation Agent",
+      "agent_type": "Single",
+      "node_id": "task_delegation_agent",
+      "status": "created",
+      "provider": "openai",
+      "model": "gpt-4.1",
+      "temperature": 0.3,
+      "top_p": 1,
+      "tools": ["gmail", "slack"],
+      "response_schema": "response_schemas/task_delegation_agent_response.json"
+    }
+  ],
+  "workflow_status": "complete",
+  "total_agents": 1,
+  "created_at": "2026-02-08T00:00:00Z"
+}
