@@ -4,53 +4,33 @@
   "agent_purpose": "Monitors Gmail for delegation emails, extracts task details, and sends Slack notifications to teammates",
   "description": "Response schema for Task Delegation Agent that processes Gmail emails with delegation keywords and notifies teammates via Slack",
   "response_schema": {
-    "status": "string",
-    "result": {
-      "summary": "string",
-      "data": {
-        "tasks_processed": "number",
-        "teammates_notified": "number"
-      },
-      "items": [
-        "any"
-      ]
+    "summary": "string",
+    "data": {
+      "tasks_processed": "number",
+      "teammates_notified": "number"
     },
-    "metadata": {
-      "agent_name": "string",
-      "timestamp": "string"
-    }
+    "items": [
+      "any"
+    ]
   },
   "example_response": {
-    "status": "success",
-    "result": {
-      "summary": "Processed 0 task emails, notified 0 teammates via Slack",
-      "data": {
-        "tasks_processed": 0,
-        "teammates_notified": 0
-      },
-      "items": []
+    "summary": "Processed 0 task emails, notified 0 teammates via Slack",
+    "data": {
+      "tasks_processed": 0,
+      "teammates_notified": 0
     },
-    "metadata": {
-      "agent_name": "Task Delegation Agent",
-      "timestamp": "2024-06-11T17:35:00Z"
-    }
+    "items": []
   },
   "is_actual_tested": true,
-  "test_timestamp": "2026-02-08T21:38:08.992247",
+  "test_timestamp": "2026-02-08T21:46:32.820729",
   "test_message_used": "Hello, provide a sample response",
   "actual_test_response": {
-    "status": "success",
-    "result": {
-      "summary": "Processed 0 task emails, notified 0 teammates via Slack",
-      "data": {
-        "tasks_processed": 0,
-        "teammates_notified": 0
-      },
-      "items": []
+    "summary": "Processed 0 task emails, notified 0 teammates via Slack",
+    "data": {
+      "tasks_processed": 0,
+      "teammates_notified": 0
     },
-    "metadata": {
-      "agent_name": "Task Delegation Agent",
-      "timestamp": "2024-06-11T17:35:00Z"
-    }
-  }
+    "items": []
+  },
+  "test_passed": false
 }

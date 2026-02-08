@@ -15,7 +15,7 @@
         "agent_id": "698901b47b0e3eacc4301937",
         "agent_config": {
           "name": "Task Delegation Agent",
-          "description": "Monitors Gmail for emails containing delegation keywords (urgent, team, delegate), extracts task title, description, priority, context, and assignee mentions (@Name or \"for Name\"), then sends formatted Slack messages to designated teammates with complete task details.",
+          "description": "Monitors Gmail for emails containing delegation keywords (urgent, team, delegate), extracts task title, description, priority, context, and assignee mentions (@Name or \"for Name\"), then sends formatted Slack messages to the #slack-test channel with complete task details.",
           "provider_id": "openai",
           "model": "gpt-4.1",
           "temperature": 0.3,

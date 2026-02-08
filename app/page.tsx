@@ -14,7 +14,7 @@ import {
   Mail, Send, CheckCircle2, AlertCircle, Clock, Users,
   Briefcase, Settings, Search, ChevronDown, ChevronUp,
   ChevronRight, RefreshCw, Loader2, X, User, Inbox,
-  Bell, ListTodo, Zap, Play
+  Bell, ListTodo, Zap, Play, Hash, MessageSquare
 } from 'lucide-react'
 
 // --- Types ---
@@ -350,7 +350,7 @@ export default function Home() {
 
     try {
       const result = await callAIAgent(
-        'Process my recent emails for task delegation. Look for emails with keywords: urgent, team, delegate. Extract task details including title, description, priority, assignee mentions, and send Slack notifications to the relevant teammates. Return the results as structured JSON.',
+        'Process my recent emails for task delegation. Look for emails with keywords: urgent, team, delegate. Extract task details including title, description, priority, assignee mentions, and send Slack notifications to the #slack-test channel. Return the results as structured JSON.',
         AGENT_ID
       )
 
@@ -481,13 +481,21 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 mb-4 flex-wrap">
+              <div className="flex items-center gap-2 mb-3 flex-wrap">
                 <span className="text-xs text-slate-500 mr-1">Filters:</span>
                 {keywords.map((kw) => (
                   <Badge key={kw} variant="secondary" className="text-xs bg-blue-50 text-blue-700 border border-blue-200">
                     {kw}
                   </Badge>
                 ))}
+              </div>
+
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xs text-slate-500">Slack Channel:</span>
+                <Badge variant="outline" className="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200">
+                  <Hash className="w-3 h-3 mr-1" />
+                  slack-test
+                </Badge>
               </div>
 
               <div className="flex items-center gap-3">
@@ -657,7 +665,7 @@ export default function Home() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-700">Task Delegation Agent</p>
-                  <p className="text-xs text-slate-400">Scans emails, extracts tasks, and sends Slack notifications to teammates</p>
+                  <p className="text-xs text-slate-400">Scans emails, extracts tasks, and sends Slack notifications to #slack-test</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
