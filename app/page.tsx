@@ -14,7 +14,8 @@ import {
   Mail, Send, CheckCircle2, AlertCircle, Clock, Users,
   Briefcase, Settings, Search, ChevronDown, ChevronUp,
   ChevronRight, RefreshCw, Loader2, X, User, Inbox,
-  Bell, ListTodo, Zap, Play, Hash, MessageSquare
+  Bell, ListTodo, Zap, Play, Hash, MessageSquare,
+  ScanSearch, Brain
 } from 'lucide-react'
 
 // --- Types ---
@@ -31,6 +32,7 @@ interface TaskItem {
 }
 
 interface DelegationData {
+  emails_scanned?: number
   tasks_processed?: number
   teammates_notified?: number
 }
@@ -45,6 +47,7 @@ interface DelegationRecord {
   id: string
   tasks: TaskItem[]
   summary: string
+  emailsScanned: number
   tasksProcessed: number
   teammatesNotified: number
   timestamp: string
@@ -55,8 +58,9 @@ interface DelegationRecord {
 const AGENT_ID = '698901b47b0e3eacc4301937'
 
 const SAMPLE_DATA: AgentResult = {
-  summary: 'Processed 2 task emails, notified 3 teammates via Slack',
+  summary: 'Scanned 20 emails, identified 2 actionable tasks, notified 3 teammates via Slack',
   data: {
+    emails_scanned: 20,
     tasks_processed: 2,
     teammates_notified: 3,
   },
@@ -99,6 +103,7 @@ const SAMPLE_HISTORY: DelegationRecord[] = [
     id: 'sample-1',
     tasks: SAMPLE_DATA.items || [],
     summary: SAMPLE_DATA.summary || '',
+    emailsScanned: SAMPLE_DATA.data?.emails_scanned || 0,
     tasksProcessed: SAMPLE_DATA.data?.tasks_processed || 0,
     teammatesNotified: SAMPLE_DATA.data?.teammates_notified || 0,
     timestamp: '2024-06-09T15:20:59Z',
@@ -117,7 +122,8 @@ const SAMPLE_HISTORY: DelegationRecord[] = [
         timestamp: '2024-06-08T10:15:30Z',
       },
     ],
-    summary: 'Processed 1 task email, notified 1 teammate via Slack',
+    summary: 'Scanned 20 emails, identified 1 actionable task, notified 1 teammate via Slack',
+    emailsScanned: 20,
     tasksProcessed: 1,
     teammatesNotified: 1,
     timestamp: '2024-06-08T10:30:00Z',
@@ -274,6 +280,10 @@ function HistoryEntry({ record, onClick, isActive }: { record: DelegationRecord;
       <p className="text-xs text-slate-500 line-clamp-2">{record.summary || 'No summary'}</p>
       <div className="flex items-center gap-3 mt-1.5">
         <span className="text-xs text-slate-400 flex items-center gap-1">
+          <Mail className="w-3 h-3" />
+          {record.emailsScanned} scanned
+        </span>
+        <span className="text-xs text-slate-400 flex items-center gap-1">
           <ListTodo className="w-3 h-3" />
           {record.tasksProcessed} tasks
         </span>
@@ -311,6 +321,7 @@ export default function Home() {
   const activeResult = showSample ? SAMPLE_DATA : currentResult
   const activeHistory = showSample ? SAMPLE_HISTORY : history
 
+  const emailsScanned = activeResult?.data?.emails_scanned ?? 0
   const tasksProcessed = activeResult?.data?.tasks_processed ?? 0
   const teammatesNotified = activeResult?.data?.teammates_notified ?? 0
   const activeItems = Array.isArray(activeResult?.items) ? activeResult.items : []
@@ -344,13 +355,13 @@ export default function Home() {
   const processTasks = useCallback(async () => {
     setLoading(true)
     setError(null)
-    setStatusMessage('Processing emails for tasks...')
+    setStatusMessage('Analyzing your last 20 emails for actionable tasks...')
     setActiveAgentId(AGENT_ID)
     setSelectedHistoryId(null)
 
     try {
       const result = await callAIAgent(
-        'Process my recent emails for task delegation. Look for emails with keywords: urgent, team, delegate. Extract task details including title, description, priority, assignee mentions, and send Slack notifications to the #slack-test channel. Return the results as structured JSON.',
+        'Fetch my last 20 emails and analyze them semantically for any actionable tasks, assignments, requests, or delegation opportunities. Do not rely on simple keyword matching — use intelligent analysis to understand context and intent. Extract task details including title, description, priority, assignee, and send Slack notifications to the #slack-test channel for each identified task. Return the results as structured JSON.',
         AGENT_ID
       )
 
@@ -362,6 +373,7 @@ export default function Home() {
           id: `rec-${Date.now()}`,
           tasks: Array.isArray(agentData.items) ? agentData.items : [],
           summary: agentData.summary || 'Tasks processed',
+          emailsScanned: agentData.data?.emails_scanned ?? 0,
           tasksProcessed: agentData.data?.tasks_processed ?? 0,
           teammatesNotified: agentData.data?.teammates_notified ?? 0,
           timestamp: new Date().toISOString(),
@@ -387,6 +399,7 @@ export default function Home() {
     setCurrentResult({
       summary: record.summary,
       data: {
+        emails_scanned: record.emailsScanned,
         tasks_processed: record.tasksProcessed,
         teammates_notified: record.teammatesNotified,
       },
@@ -397,8 +410,6 @@ export default function Home() {
   const clearSelection = () => {
     setSelectedHistoryId(null)
   }
-
-  const keywords = ['urgent', 'team', 'delegate']
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[hsl(230,50%,95%)] via-[hsl(260,45%,94%)] to-[hsl(200,45%,94%)]">
@@ -411,7 +422,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-lg font-semibold text-slate-800 leading-tight">Task Delegation</h1>
-              <p className="text-xs text-slate-500">Automated Email-to-Slack Task Distribution</p>
+              <p className="text-xs text-slate-500">Smart Email Analysis & Slack Task Distribution</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -448,22 +459,28 @@ export default function Home() {
           {/* Main Content */}
           <div className="flex-1 min-w-0 space-y-6">
             {/* Quick Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <StatCard
+                icon={<ScanSearch className="w-5 h-5 text-indigo-600" />}
+                label="Emails Scanned"
+                value={emailsScanned}
+                accent="bg-indigo-100"
+              />
               <StatCard
                 icon={<ListTodo className="w-5 h-5 text-blue-600" />}
-                label="Tasks Processed"
+                label="Tasks Found"
                 value={tasksProcessed}
                 accent="bg-blue-100"
               />
               <StatCard
                 icon={<Users className="w-5 h-5 text-emerald-600" />}
-                label="Teammates Notified"
+                label="Notified"
                 value={teammatesNotified}
                 accent="bg-emerald-100"
               />
               <StatCard
                 icon={<Bell className="w-5 h-5 text-amber-600" />}
-                label="Pending Items"
+                label="Pending"
                 value={pendingItems}
                 accent="bg-amber-100"
               />
@@ -477,17 +494,19 @@ export default function Home() {
                     <Zap className="w-4 h-4 text-blue-600" />
                     Process Tasks
                   </h2>
-                  <p className="text-xs text-slate-500 mt-0.5">Scan your inbox for delegatable tasks and notify teammates on Slack.</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Semantically analyze your last 20 emails for actionable tasks and notify teammates on Slack.</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 mb-3 flex-wrap">
-                <span className="text-xs text-slate-500 mr-1">Filters:</span>
-                {keywords.map((kw) => (
-                  <Badge key={kw} variant="secondary" className="text-xs bg-blue-50 text-blue-700 border border-blue-200">
-                    {kw}
-                  </Badge>
-                ))}
+                <Badge variant="secondary" className="text-xs bg-violet-50 text-violet-700 border border-violet-200">
+                  <Brain className="w-3 h-3 mr-1" />
+                  Smart Analysis
+                </Badge>
+                <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700 border border-blue-200">
+                  <Mail className="w-3 h-3 mr-1" />
+                  Last 20 Emails
+                </Badge>
               </div>
 
               <div className="flex items-center gap-2 mb-4">
@@ -517,7 +536,7 @@ export default function Home() {
                   )}
                 </Button>
                 {!loading && !showSample && !currentResult && !error && (
-                  <span className="text-xs text-slate-400">Click to scan your inbox and delegate tasks</span>
+                  <span className="text-xs text-slate-400">Click to analyze your last 20 emails and delegate tasks</span>
                 )}
               </div>
 
@@ -591,7 +610,7 @@ export default function Home() {
                 <GlassCard className="p-10 text-center">
                   <Inbox className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                   <p className="text-sm font-medium text-slate-500 mb-1">No tasks delegated yet</p>
-                  <p className="text-xs text-slate-400">Click "Process Tasks" to scan your inbox and automatically delegate tasks to teammates.</p>
+                  <p className="text-xs text-slate-400">Click &quot;Process Tasks&quot; to analyze your last 20 emails and automatically delegate tasks to teammates.</p>
                 </GlassCard>
               ) : (
                 <div className="space-y-3">
@@ -665,7 +684,7 @@ export default function Home() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-700">Task Delegation Agent</p>
-                  <p className="text-xs text-slate-400">Scans emails, extracts tasks, and sends Slack notifications to #slack-test</p>
+                  <p className="text-xs text-slate-400">Analyzes last 20 emails semantically, extracts actionable tasks, and notifies via #slack-test</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
